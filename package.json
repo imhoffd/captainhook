@@ -1,0 +1,51 @@
+{
+  "name": "captainhook",
+  "version": "0.2.0",
+  "description": "Git hooks made easy, even for a codfish.",
+  "author": "Dan Imhoff <dwieeb@gmail.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "bin": {
+    "captainhook": "bin/captainhook"
+  },
+  "scripts": {
+    "lint": "npm run eslint && npm run prettier -- --check",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
+    "eslint": "eslint . --ext ts",
+    "prettier": "prettier 'src/**/*.ts'",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "git",
+    "hook",
+    "hooks",
+    "test",
+    "lint",
+    "applypatch-msg",
+    "pre-applypatch",
+    "post-applypatch",
+    "pre-commit",
+    "prepare-commit-msg",
+    "commit-msg",
+    "post-commit",
+    "pre-rebase",
+    "post-checkout",
+    "post-merge",
+    "post-update",
+    "pre-auto-gc",
+    "post-rewrite",
+    "pre-push"
+  ],
+  "devDependencies": {
+    "@imhoff/eslint-config": "^1.1.0",
+    "@imhoff/prettier-config": "^1.0.0",
+    "eslint": "^7.21.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.2"
+  },
+  "prettier": "@imhoff/prettier-config",
+  "eslintConfig": {
+    "extends": "@imhoff/eslint-config/recommended"
+  }
+}
