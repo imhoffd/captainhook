@@ -7,8 +7,10 @@ import { isOK } from './fn';
 export const readJson = async <T = unknown>(p: string): Promise<T> =>
   JSON.parse(await readFile(p, { encoding: 'utf8' }));
 
-export const accessOK = async (p: string): Promise<boolean> =>
-  isOK(() => access(p, constants.R_OK));
+export const accessOK = async (
+  p: string,
+  mode = constants.R_OK,
+): Promise<boolean> => isOK(access, p, mode);
 
 export const findPackageJson = async (dir = process.cwd()): Promise<string> =>
   _findUp(dir, 'package.json');
