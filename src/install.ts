@@ -1,7 +1,7 @@
 import { copyFile, readFile } from 'fs/promises';
 import path from 'path';
 
-import { tryfn } from './util/fn';
+import { encase } from './util/fn';
 import { log } from './util/log';
 
 const ASSETS_DIR = path.resolve(path.dirname(__dirname), 'assets');
@@ -44,7 +44,7 @@ const installRunner = async (): Promise<void> => {
 
 const installHook = async (hook: string): Promise<void> => {
   const p = path.resolve(HOOKS_DIR, hook);
-  const result = await tryfn(readFile, p, { encoding: 'utf8' });
+  const result = await encase(readFile, p, { encoding: 'utf8' });
 
   if (result.ok && !result.value.includes('captainhook')) {
     log(`NOT overwriting custom ${hook} hook`);
