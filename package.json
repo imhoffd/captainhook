@@ -13,8 +13,11 @@
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
     "eslint": "eslint . --ext ts",
     "prettier": "prettier 'src/**/*.ts'",
-    "build": "tsc",
-    "watch": "tsc -w"
+    "tsc": "tsc",
+    "ncc": "ncc build build/index.js -o dist",
+    "tsc:watch": "npm run tsc -- -w",
+    "ncc:watch": "npm run ncc -- --watch",
+    "build": "npm run tsc && npm run ncc"
   },
   "hooks": {
     "pre-commit": "npm run lint"
@@ -44,8 +47,10 @@
     "@imhoff/eslint-config": "^1.1.0",
     "@imhoff/prettier-config": "^1.0.0",
     "@types/node": "^14.14.31",
+    "@vercel/ncc": "^0.27.0",
     "eslint": "^7.21.0",
     "prettier": "^2.2.1",
+    "tslib": "^1.14.1",
     "typescript": "^4.2.2"
   },
   "prettier": "@imhoff/prettier-config",
