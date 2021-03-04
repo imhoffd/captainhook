@@ -1,5 +1,5 @@
 import { copyFile, readFile } from 'fs/promises';
-import * as path from 'path';
+import path from 'path';
 
 import { tryfn } from './util/fn';
 import { log } from './util/log';
