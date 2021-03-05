@@ -9,11 +9,11 @@ export const readJson = async <T = unknown>(p: string): Promise<T> =>
 
 export const accessOK = async (
   p: string,
-  mode = constants.R_OK,
+  mode = constants.F_OK,
 ): Promise<boolean> => encaseOK(access)(p, mode);
 
-export const findPackageJson = async (dir: string): Promise<string> =>
-  _findUp(dir, 'package.json');
+export const findGitDir = async (dir: string): Promise<string> =>
+  _findUp(dir, '.git');
 
 const _findUp = async (
   dir: string,

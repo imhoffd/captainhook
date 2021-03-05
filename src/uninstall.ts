@@ -20,7 +20,7 @@ const uninstallRunner = async (ctx: Context): Promise<void> => {
     return;
   }
 
-  log(`removing ${path.relative(ctx.cwd, p)}`);
+  log(`removing ${path.relative(ctx.projectDir, p)}`);
   await unlink(p);
 };
 
@@ -41,6 +41,6 @@ const uninstallHook = async (ctx: Context, hook: string): Promise<void> => {
 };
 
 const unlinkHook = async (ctx: Context, p: string): Promise<void> => {
-  log(`removing ${path.relative(ctx.cwd, p)}`);
+  log(`removing ${path.relative(ctx.projectDir, p)}`);
   await unlink(p);
 };

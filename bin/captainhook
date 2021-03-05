@@ -11,5 +11,5 @@ if (process.argv.includes('--verbose')) {
 require('..').run({
   args: process.argv.slice(2),
   cwd: process.cwd(),
-  pkgdir: require('path').dirname(__dirname),
+  pkgDir: require('path').dirname(__dirname),
 });

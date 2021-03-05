@@ -1,11 +1,13 @@
 import path from 'path';
 
+import { findGitDir } from '../util/fs';
+
 import { SUPPORTED_HOOKS } from './hooks';
 
 export interface Bootstrap {
   readonly args: readonly string[];
   readonly cwd: string;
-  readonly pkgdir: string;
+  readonly pkgDir: string;
 }
 
 export interface Assets {
@@ -16,13 +18,17 @@ export interface Assets {
 export interface Context extends Bootstrap {
   readonly assetDir: string;
   readonly assets: Assets;
+  readonly projectDir: string;
+  readonly gitDir: string;
   readonly hooksDir: string;
   readonly hooks: readonly string[];
 }
 
 export const getContext = async (b: Bootstrap): Promise<Context> => {
-  const assetDir = path.resolve(b.pkgdir, 'assets');
-  const hooksDir = path.resolve(b.cwd, '.git', 'hooks');
+  const assetDir = path.resolve(b.pkgDir, 'assets');
+  const gitDir = await findGitDir(b.pkgDir);
+  const hooksDir = path.resolve(gitDir, 'hooks');
+  const projectDir = path.dirname(gitDir);
 
   return {
     ...b,
@@ -31,6 +37,8 @@ export const getContext = async (b: Bootstrap): Promise<Context> => {
       hookFile: path.resolve(assetDir, 'hook.sh'),
       runnerFile: path.resolve(assetDir, 'captainhook.sh'),
     },
+    projectDir,
+    gitDir,
     hooksDir,
     hooks: SUPPORTED_HOOKS,
   };

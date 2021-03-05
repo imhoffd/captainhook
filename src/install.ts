@@ -16,7 +16,7 @@ export const run = async (ctx: Context): Promise<void> => {
 const installRunner = async (ctx: Context): Promise<void> => {
   const p = path.resolve(ctx.hooksDir, path.basename(ctx.assets.runnerFile));
 
-  log(`writing ${path.relative(ctx.cwd, p)}`);
+  log(`writing ${path.relative(ctx.projectDir, p)}`);
   await copyFile(ctx.assets.runnerFile, p);
 };
 
@@ -33,6 +33,6 @@ const installHook = async (ctx: Context, hook: string): Promise<void> => {
 };
 
 const copyHook = async (ctx: Context, p: string): Promise<void> => {
-  log(`writing ${path.relative(ctx.cwd, p)}`);
+  log(`writing ${path.relative(ctx.projectDir, p)}`);
   await copyFile(ctx.assets.hookFile, p);
 };
