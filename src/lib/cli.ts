@@ -1,5 +1,7 @@
 import path from 'path';
 
+import { SUPPORTED_HOOKS } from './hooks';
+
 export interface Bootstrap {
   readonly args: readonly string[];
   readonly cwd: string;
@@ -30,21 +32,6 @@ export const getContext = async (b: Bootstrap): Promise<Context> => {
       runnerFile: path.resolve(assetDir, 'captainhook.sh'),
     },
     hooksDir,
-    hooks: [
-      'applypatch-msg',
-      'pre-applypatch',
-      'post-applypatch',
-      'pre-commit',
-      'prepare-commit-msg',
-      'commit-msg',
-      'post-commit',
-      'pre-rebase',
-      'post-checkout',
-      'post-merge',
-      'post-update',
-      'pre-auto-gc',
-      'post-rewrite',
-      'pre-push',
-    ],
+    hooks: SUPPORTED_HOOKS,
   };
 };
