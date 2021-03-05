@@ -18,7 +18,9 @@
     "tsc:watch": "npm run tsc -- -w",
     "ncc:watch": "npm run ncc -- --watch",
     "build": "npm run clean && npm run tsc && npm run ncc",
-    "clean": "rimraf build dist"
+    "clean": "rimraf build dist",
+    "postinstall": "captainhook install",
+    "uninstall": "captainhook uninstall"
   },
   "hooks": {
     "pre-commit": "npm run lint"
