@@ -1,6 +1,6 @@
 {
   "name": "captainhook",
-  "version": "0.2.0",
+  "version": "0.1.99",
   "description": "Git hooks made easy, even for a codfish.",
   "author": "Dan Imhoff <dwieeb@gmail.com>",
   "license": "MIT",
