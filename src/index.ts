@@ -16,7 +16,8 @@ export const run = async (b: Bootstrap): Promise<void> => {
       return runInstall(ctx);
     }
     case 'uninstall': {
-      break; // TODO
+      const { run: runUninstall } = await import('./uninstall');
+      return runUninstall(ctx);
     }
   }
 
