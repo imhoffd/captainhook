@@ -20,7 +20,8 @@
     "build": "npm run clean && npm run tsc && npm run ncc",
     "clean": "rimraf build dist",
     "postinstall": "captainhook install",
-    "uninstall": "captainhook uninstall"
+    "uninstall": "captainhook uninstall",
+    "prepublishOnly": "npm run build"
   },
   "hooks": {
     "pre-commit": "npm run lint"
