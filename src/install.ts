@@ -1,56 +1,38 @@
-import { copyFile, readFile } from 'fs/promises';
+import { copyFile } from 'fs/promises';
 import path from 'path';
 
-import { encase } from './util/fn';
+import type { Context } from './lib/cli';
+import { checkHook } from './lib/hooks';
+import { readFile } from './util/fs/encased';
 import { log } from './util/log';
 
-const ASSETS_DIR = path.resolve(path.dirname(__dirname), 'assets');
-const RUNNER_FILE = path.resolve(ASSETS_DIR, 'captainhook.sh');
-const ENTRYPOINT_FILE = path.resolve(ASSETS_DIR, 'hook.sh');
-const HOOKS_DIR = path.resolve(process.cwd(), '.git', 'hooks');
-const HOOKS = [
-  'applypatch-msg',
-  'pre-applypatch',
-  'post-applypatch',
-  'pre-commit',
-  'prepare-commit-msg',
-  'commit-msg',
-  'post-commit',
-  'pre-rebase',
-  'post-checkout',
-  'post-merge',
-  'post-update',
-  'pre-auto-gc',
-  'post-rewrite',
-  'pre-push',
-];
-
-export const run = async (args: string[]): Promise<void> => {
-  await installRunner();
-
-  for (const hook of HOOKS) {
-    await installHook(hook);
-  }
+export const run = async (ctx: Context): Promise<void> => {
+  await installRunner(ctx);
+  await Promise.all(ctx.hooks.map(hook => installHook(ctx, hook)));
 
   log('done! use "npx captainhook uninstall" to uninstall');
 };
 
-const installRunner = async (): Promise<void> => {
-  const p = path.resolve(HOOKS_DIR, 'captainhook.sh');
+const installRunner = async (ctx: Context): Promise<void> => {
+  const p = path.resolve(ctx.hooksDir, path.basename(ctx.assets.runnerFile));
 
-  log(`writing ${path.relative(process.cwd(), p)}`);
-  await copyFile(RUNNER_FILE, p);
+  log(`writing ${path.relative(ctx.cwd, p)}`);
+  await copyFile(ctx.assets.runnerFile, p);
 };
 
-const installHook = async (hook: string): Promise<void> => {
-  const p = path.resolve(HOOKS_DIR, hook);
-  const result = await encase(readFile, p, { encoding: 'utf8' });
+const installHook = async (ctx: Context, hook: string): Promise<void> => {
+  const p = path.resolve(ctx.hooksDir, hook);
+  const result = await readFile(p, { encoding: 'utf8' });
 
-  if (result.ok && !result.value.includes('captainhook')) {
+  if (result.ok && !checkHook(result.value.toString())) {
     log(`NOT overwriting custom ${hook} hook`);
     return;
   }
 
-  log(`writing ${path.relative(process.cwd(), p)}`);
-  await copyFile(ENTRYPOINT_FILE, p);
+  await copyHook(ctx, p);
+};
+
+const copyHook = async (ctx: Context, p: string): Promise<void> => {
+  log(`writing ${path.relative(ctx.cwd, p)}`);
+  await copyFile(ctx.assets.hookFile, p);
 };

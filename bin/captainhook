@@ -8,4 +8,8 @@ if (process.argv.includes('--verbose')) {
   process.env.DEBUG = '*';
 }
 
-require('..').run();
+require('..').run({
+  args: process.argv.slice(2),
+  cwd: process.cwd(),
+  pkgdir: require('path').dirname(__dirname),
+});

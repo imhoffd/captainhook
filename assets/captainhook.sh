@@ -1,4 +1,5 @@
-# captainhook hook runner
+#!/bin/sh
+# captainhook file
 # https://github.com/imhoffd/captainhook
 
 HOOK="$(basename "$0")"

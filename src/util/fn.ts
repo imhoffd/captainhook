@@ -12,10 +12,9 @@ export const err = <T, E = Error>(error: E): Result<T, E> => ({
   error,
 });
 
-export const encase = async <T, A extends any[]>(
+export const encase = <T, A extends any[]>(
   fn: (...args: A) => Promise<T>,
-  ...args: A
-): Promise<Result<T>> => {
+) => async (...args: A): Promise<Result<T>> => {
   try {
     return ok(await fn(...args));
   } catch (e) {
@@ -23,7 +22,6 @@ export const encase = async <T, A extends any[]>(
   }
 };
 
-export const isOK = async <A extends any[]>(
+export const encaseOK = <A extends any[]>(
   fn: (...args: A) => Promise<unknown>,
-  ...args: A
-): Promise<boolean> => (await encase(fn, ...args)).ok;
+) => async (...args: A): Promise<boolean> => (await encase(fn)(...args)).ok;

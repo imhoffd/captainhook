@@ -2,7 +2,7 @@ import { constants } from 'fs';
 import { access, readFile } from 'fs/promises';
 import path from 'path';
 
-import { isOK } from './fn';
+import { encaseOK } from '../fn';
 
 export const readJson = async <T = unknown>(p: string): Promise<T> =>
   JSON.parse(await readFile(p, { encoding: 'utf8' }));
@@ -10,9 +10,9 @@ export const readJson = async <T = unknown>(p: string): Promise<T> =>
 export const accessOK = async (
   p: string,
   mode = constants.R_OK,
-): Promise<boolean> => isOK(access, p, mode);
+): Promise<boolean> => encaseOK(access)(p, mode);
 
-export const findPackageJson = async (dir = process.cwd()): Promise<string> =>
+export const findPackageJson = async (dir: string): Promise<string> =>
   _findUp(dir, 'package.json');
 
 const _findUp = async (
