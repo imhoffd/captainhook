@@ -17,7 +17,8 @@
     "ncc": "ncc build build/index.js -o dist",
     "tsc:watch": "npm run tsc -- -w",
     "ncc:watch": "npm run ncc -- --watch",
-    "build": "npm run tsc && npm run ncc"
+    "build": "npm run clean && npm run tsc && npm run ncc",
+    "clean": "rimraf build dist"
   },
   "hooks": {
     "pre-commit": "npm run lint"
@@ -50,6 +51,7 @@
     "@vercel/ncc": "^0.27.0",
     "eslint": "^7.21.0",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "tslib": "^1.14.1",
     "typescript": "^4.2.2"
   },
