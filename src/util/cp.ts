@@ -1,4 +1,4 @@
-import * as cp from 'child_process';
+import * as cp from 'node:child_process'
 
 export const run = (
   cmd: string,
@@ -6,15 +6,15 @@ export const run = (
   options: cp.SpawnOptions,
 ): Promise<number> => {
   return new Promise<number>((resolve, reject) => {
-    const p = cp.spawn(cmd, args, options);
+    const p = cp.spawn(cmd, args, options)
 
-    p.on('error', reject);
+    p.on('error', reject)
     p.on('close', (code, signal) => {
       if (code === null) {
-        reject(`${signal} signal interrupt`);
+        reject(new Error(`${signal ?? 'null'} signal interrupt`))
       } else {
-        resolve(code);
+        resolve(code)
       }
-    });
-  });
-};
+    })
+  })
+}

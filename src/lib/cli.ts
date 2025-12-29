@@ -1,34 +1,33 @@
-import path from 'path';
+import path from 'node:path'
 
-import { findGitDir } from '../util/fs';
-
-import { SUPPORTED_HOOKS } from './hooks';
+import { findGitDir } from '../util/fs'
+import { SUPPORTED_HOOKS } from './hooks'
 
 export interface Bootstrap {
-  readonly args: readonly string[];
-  readonly cwd: string;
-  readonly pkgDir: string;
+  readonly args: readonly string[]
+  readonly cwd: string
+  readonly pkgDir: string
 }
 
 export interface Assets {
-  readonly hookFile: string;
-  readonly runnerFile: string;
+  readonly hookFile: string
+  readonly runnerFile: string
 }
 
 export interface Context extends Bootstrap {
-  readonly assetDir: string;
-  readonly assets: Assets;
-  readonly projectDir: string;
-  readonly gitDir: string;
-  readonly hooksDir: string;
-  readonly hooks: readonly string[];
+  readonly assetDir: string
+  readonly assets: Assets
+  readonly projectDir: string
+  readonly gitDir: string
+  readonly hooksDir: string
+  readonly hooks: readonly string[]
 }
 
 export const getContext = async (b: Bootstrap): Promise<Context> => {
-  const assetDir = path.resolve(b.pkgDir, 'assets');
-  const gitDir = await findGitDir(b.pkgDir);
-  const hooksDir = path.resolve(gitDir, 'hooks');
-  const projectDir = path.dirname(gitDir);
+  const assetDir = path.resolve(b.pkgDir, 'assets')
+  const gitDir = await findGitDir(b.pkgDir)
+  const hooksDir = path.resolve(gitDir, 'hooks')
+  const projectDir = path.dirname(gitDir)
 
   return {
     ...b,
@@ -41,5 +40,5 @@ export const getContext = async (b: Bootstrap): Promise<Context> => {
     gitDir,
     hooksDir,
     hooks: SUPPORTED_HOOKS,
-  };
-};
+  }
+}
