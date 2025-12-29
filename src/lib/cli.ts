@@ -25,9 +25,8 @@ export interface Context extends Bootstrap {
 
 export const getContext = async (b: Bootstrap): Promise<Context> => {
   const assetDir = path.resolve(b.pkgDir, 'assets')
-  const gitDir = await findGitDir(b.pkgDir)
+  const { gitDir, projectDir } = await findGitDir(b.pkgDir)
   const hooksDir = path.resolve(gitDir, 'hooks')
-  const projectDir = path.dirname(gitDir)
 
   return {
     ...b,

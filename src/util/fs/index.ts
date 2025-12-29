@@ -12,8 +12,14 @@ export const accessOK = async (
   mode = constants.F_OK,
 ): Promise<boolean> => encaseOK(access)(p, mode)
 
-export const findGitDir = async (dir: string): Promise<string> => {
+export interface GitDirResult {
+  readonly gitDir: string
+  readonly projectDir: string
+}
+
+export const findGitDir = async (dir: string): Promise<GitDirResult> => {
   const gitPath = await _findUp(dir, '.git')
+  const projectDir = path.dirname(gitPath)
 
   const stats = await stat(gitPath)
 
@@ -44,10 +50,16 @@ export const findGitDir = async (dir: string): Promise<string> => {
     const commondirContent = await readFile(commondirPath, { encoding: 'utf8' })
     const commondir = commondirContent.trim()
 
-    return path.resolve(resolvedGitDir, commondir)
+    return {
+      gitDir: path.resolve(resolvedGitDir, commondir),
+      projectDir,
+    }
   }
 
-  return resolvedGitDir
+  return {
+    gitDir: resolvedGitDir,
+    projectDir,
+  }
 }
 
 const _findUp = async (
