@@ -17,6 +17,8 @@ export const findGitDir = async (dir: string): Promise<string> => {
 
   const stats = await stat(gitPath)
 
+  let resolvedGitDir: string
+
   if (stats.isFile()) {
     const content = await readFile(gitPath, { encoding: 'utf8' })
     const match = content.match(/^gitdir:\s*(.+)$/m)
@@ -28,12 +30,24 @@ export const findGitDir = async (dir: string): Promise<string> => {
     }
 
     const gitdirPath = match[1].trim()
-    return path.isAbsolute(gitdirPath)
+
+    resolvedGitDir = path.isAbsolute(gitdirPath)
       ? gitdirPath
       : path.resolve(path.dirname(gitPath), gitdirPath)
+  } else {
+    resolvedGitDir = gitPath
   }
 
-  return gitPath
+  const commondirPath = path.join(resolvedGitDir, 'commondir')
+
+  if (await accessOK(commondirPath)) {
+    const commondirContent = await readFile(commondirPath, { encoding: 'utf8' })
+    const commondir = commondirContent.trim()
+
+    return path.resolve(resolvedGitDir, commondir)
+  }
+
+  return resolvedGitDir
 }
 
 const _findUp = async (
