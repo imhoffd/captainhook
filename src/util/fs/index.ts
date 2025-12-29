@@ -1,5 +1,5 @@
 import { constants } from 'node:fs'
-import { access, readFile } from 'node:fs/promises'
+import { access, readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 
 import { encaseOK } from '../fn'
@@ -12,8 +12,29 @@ export const accessOK = async (
   mode = constants.F_OK,
 ): Promise<boolean> => encaseOK(access)(p, mode)
 
-export const findGitDir = async (dir: string): Promise<string> =>
-  _findUp(dir, '.git')
+export const findGitDir = async (dir: string): Promise<string> => {
+  const gitPath = await _findUp(dir, '.git')
+
+  const stats = await stat(gitPath)
+
+  if (stats.isFile()) {
+    const content = await readFile(gitPath, { encoding: 'utf8' })
+    const match = content.match(/^gitdir:\s*(.+)$/m)
+
+    if (!match) {
+      throw new Error(
+        `Invalid .git file at ${gitPath}: expected "gitdir: <path>" format`,
+      )
+    }
+
+    const gitdirPath = match[1].trim()
+    return path.isAbsolute(gitdirPath)
+      ? gitdirPath
+      : path.resolve(path.dirname(gitPath), gitdirPath)
+  }
+
+  return gitPath
+}
 
 const _findUp = async (
   dir: string,
